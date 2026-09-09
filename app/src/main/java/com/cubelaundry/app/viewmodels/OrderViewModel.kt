@@ -28,7 +28,8 @@ class OrderViewModel : ViewModel() {
                     address = address
                 )
                 val request = OrderRequest(customer, lineItems)
-                val response = RetrofitClient.instance.placeOrder(request)
+                // FIX: Use named argument to match ApiService signature
+                val response = RetrofitClient.instance.placeOrder(order = request)
                 if (response.isSuccessful && response.body()?.ok == true) {
                     _state.value = _state.value.copy(
                         isLoading = false,
