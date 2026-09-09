@@ -22,7 +22,8 @@ class InvoiceViewModel : ViewModel() {
         viewModelScope.launch {
             _state.value = _state.value.copy(isLoading = true, error = null)
             try {
-                val response = RetrofitClient.instance.getInvoice(invoiceNumber)
+                // FIX: Use named argument to match ApiService signature
+                val response = RetrofitClient.instance.getInvoice(invoice = invoiceNumber)
                 if (response.isSuccessful && response.body()?.ok == true) {
                     _state.value = _state.value.copy(isLoading = false, invoice = response.body())
                 } else {
@@ -32,7 +33,7 @@ class InvoiceViewModel : ViewModel() {
                     )
                 }
             } catch (e: Exception) {
-                _state.value = _state.value.copy(isLoading = false, error = "Network error")
+                _state.value = _state.value.copy(isLoading = false, error = "Network error: ${e.message}")
             }
         }
     }
