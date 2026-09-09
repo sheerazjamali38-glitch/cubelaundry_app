@@ -28,17 +28,16 @@ class OrderViewModel : ViewModel() {
                     address = address
                 )
                 val request = OrderRequest(customer, lineItems)
-                // FIX: Use named argument to match ApiService signature
                 val response = RetrofitClient.instance.placeOrder(order = request)
-                if (response.isSuccessful && response.body()?.ok == true) {
+                if (response.ok) {
                     _state.value = _state.value.copy(
                         isLoading = false,
-                        orderResult = response.body()
+                        orderResult = response
                     )
                 } else {
                     _state.value = _state.value.copy(
                         isLoading = false,
-                        error = response.body()?.message ?: "Order failed"
+                        error = response.message ?: "Order failed"
                     )
                 }
             } catch (e: Exception) {
