@@ -22,14 +22,13 @@ class InvoiceViewModel : ViewModel() {
         viewModelScope.launch {
             _state.value = _state.value.copy(isLoading = true, error = null)
             try {
-                // FIX: Use named argument to match ApiService signature
                 val response = RetrofitClient.instance.getInvoice(invoice = invoiceNumber)
-                if (response.isSuccessful && response.body()?.ok == true) {
-                    _state.value = _state.value.copy(isLoading = false, invoice = response.body())
+                if (response.ok) {
+                    _state.value = _state.value.copy(isLoading = false, invoice = response)
                 } else {
                     _state.value = _state.value.copy(
                         isLoading = false,
-                        error = response.body()?.message ?: "Invoice not found"
+                        error = response.message ?: "Invoice not found"
                     )
                 }
             } catch (e: Exception) {
